@@ -1,0 +1,73 @@
+plugins {
+	id 'fabric-loom' version '1.14.10'
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.property('maven-group')
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+    maven { url 'https://maven.fabricmc.net/' }
+    maven { url "https://maven.lucko.me/" }
+    mavenCentral()
+    maven {
+        url "https://repo.luckperms.net/"
+    }
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation "net.luckperms:api:5.4"
+    compileOnly "org.projectlombok:lombok:1.18.30"
+    annotationProcessor "org.projectlombok:lombok:1.18.30"
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+            
+        }
+        resources {
+            srcDir 'src/main/resources'
+            srcDir '../shared_logic1.21/src/main/resources'
+        }
+    }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+	it.options.encoding = "UTF-8"
+}
+
+java {
+	withSourcesJar()
+    tasks.withType(Jar).configureEach {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.base.archivesName.get()}"}
+	}
+}
+

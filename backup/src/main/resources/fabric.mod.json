@@ -1,0 +1,29 @@
+﻿{
+    "schemaVersion": 1,
+    "id": "zzclear",
+    "version": "${version}",
+    "name": "Zzclear-fabric",
+    "description": "Clean up Entities.",
+    "authors": [
+        "Zzai"
+    ],
+    "contact": {
+        "issues": "https://github.com/",
+        "sources": "https://github.com/"
+    },
+    "license": "All Rights Reserved",
+    "icon": "assets/zzclear/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "clear.Zzclear"
+        ]
+    },
+    "mixins": [],
+    "depends": {
+        "fabricloader": "\u003e=0.14.21",
+        "fabric": "*",
+        "minecraft": ">=1.21.10",
+        "java": "\u003e=21"
+    }
+}

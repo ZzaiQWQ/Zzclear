@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "zzclear",
+  "version": "${version}",
+  "name": "Zzclear",
+  "description": "Zzclear Auto Clearing Mod",
+  "authors": [
+    "Zzai"
+  ],
+  "contact": {
+    "homepage": "https://github.com/ZzaiQWQ/Zzclear"
+  },
+  "license": "All Rights Reserved",
+  "icon": "assets/zzclear/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "zzai.fabric.ZzclearFabricInit"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.5",
+    "minecraft": ">=1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
