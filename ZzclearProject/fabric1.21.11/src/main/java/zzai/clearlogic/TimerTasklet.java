@@ -7,30 +7,28 @@ import zzai.clearlogic.ClearEngine;
 
 public class TimerTasklet {
 
-    private static int counter = -1;
+    private static int sweepTicksRemaining = -1;
 
-    public static void beginClearCountDown() {
-        counter = ClearConfigNode.INSTANCE.getCommon().getclearDiscount() * 20;
+    public static void startFinalCountdown() {
+        sweepTicksRemaining = ClearConfigNode.INSTANCE.getCommon().getFinalCountdownSeconds() * 20;
     }
 
     public static void abortClearCountDown() {
-        counter = -1;
+        sweepTicksRemaining = -1;
     }
 
     public static void onServerTickClear(MinecraftServer server) {
-        if (counter >= 0) {
-            if (counter == 0) {
+        if (sweepTicksRemaining >= 0) {
+            if (sweepTicksRemaining == 0) {
                 ClearEngine.INSTANCE.clear(server);
-                counter = -1;
+                sweepTicksRemaining = -1;
             } else {
-                if (counter % 20 == 0) {
-                    Static.sendMessageToAllPlayers(ClearConfigNode.INSTANCE.getCommon().getclearNotice(), counter / 20);
+                if (sweepTicksRemaining % 20 == 0) {
+                    Static.sendMessageToAllPlayers(ClearConfigNode.INSTANCE.getCommon().getCountdownMessage(),
+                            sweepTicksRemaining / 20);
                 }
-
-                --counter;
+                --sweepTicksRemaining;
             }
         }
-
     }
-
 }

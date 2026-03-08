@@ -39,22 +39,22 @@ public class ClearEngine {
         long current = server.getTickCount();
         long next = _targetClearTickTime;
 
-        int notifyT = ClearConfigNode.INSTANCE.getCommon().getclearNotify() * 20;
-        int discountT = ClearConfigNode.INSTANCE.getCommon().getclearDiscount() * 20;
+        int notifyT = ClearConfigNode.INSTANCE.getCommon().getWarningTimeSeconds() * 20;
+        int discountT = ClearConfigNode.INSTANCE.getCommon().getFinalCountdownSeconds() * 20;
 
         if (!_hasNotified && current >= next - notifyT && current < next) {
-            Static.sendMessageToAllPlayers(ClearConfigNode.INSTANCE.getCommon().getclearNotice(),
-                    ClearConfigNode.INSTANCE.getCommon().getclearNotify());
+            Static.sendMessageToAllPlayers(ClearConfigNode.INSTANCE.getCommon().getCountdownMessage(),
+                    ClearConfigNode.INSTANCE.getCommon().getWarningTimeSeconds());
             _hasNotified = true;
         }
 
         if (!_hasDiscounted && current >= next - discountT && current < next) {
-            TimerTasklet.beginClearCountDown();
+            TimerTasklet.startFinalCountdown();
             _hasDiscounted = true;
         }
 
         if (current >= next) {
-            int cycleTicks = ClearConfigNode.INSTANCE.getCommon().getclearPeriod() * 1200;
+            int cycleTicks = ClearConfigNode.INSTANCE.getCommon().getSweepIntervalMinutes() * 1200;
             _targetClearTickTime = current + cycleTicks;
             _hasNotified = false;
             _hasDiscounted = false;
@@ -66,7 +66,7 @@ public class ClearEngine {
     }
 
     public void startClearTick() {
-        TimerTasklet.beginClearCountDown();
+        TimerTasklet.startFinalCountdown();
     }
 
     public void stopClear() {
@@ -78,12 +78,12 @@ public class ClearEngine {
     public void resetTimer(MinecraftServer server) {
         if (server != null) {
             _targetClearTickTime = server.getTickCount()
-                    + (long) ClearConfigNode.INSTANCE.getCommon().getclearPeriod() * 1200L;
+                    + (long) ClearConfigNode.INSTANCE.getCommon().getSweepIntervalMinutes() * 1200L;
             _hasNotified = false;
             _hasDiscounted = false;
             TimerTasklet.abortClearCountDown();
             System.out.println("[Zzclear Debug] Timer Reset! New Target: " + _targetClearTickTime + ". Period is: "
-                    + ClearConfigNode.INSTANCE.getCommon().getclearPeriod());
+                    + ClearConfigNode.INSTANCE.getCommon().getSweepIntervalMinutes());
         }
     }
 
@@ -94,9 +94,9 @@ public class ClearEngine {
         int rMisc = 0;
 
         for (ServerLevel level : server.getAllLevels()) {
-            boolean itemEn = ClearConfigNode.INSTANCE.getItem().isEnableItemclear();
-            boolean mobEn = ClearConfigNode.INSTANCE.getMob().isEnableMobclear();
-            boolean xpEn = ClearConfigNode.INSTANCE.getOther().isEnableExpclear();
+            boolean itemEn = ClearConfigNode.INSTANCE.getItem().isSweepItems();
+            boolean mobEn = ClearConfigNode.INSTANCE.getMob().isSweepLivingEntities();
+            boolean xpEn = ClearConfigNode.INSTANCE.getOther().isSweepExperienceOrbs();
 
             List<Entity> entitiesToClear = new ArrayList<>();
             level.getAllEntities().forEach(entitiesToClear::add);
@@ -142,13 +142,13 @@ public class ClearEngine {
             }
         }
 
-        Static.sendMessageToAllPlayers(server, ClearConfigNode.INSTANCE.getCommon().getclearNoticeComplete(), rItems,
+        Static.sendMessageToAllPlayers(server, ClearConfigNode.INSTANCE.getCommon().getSweepCompleteMessage(), rItems,
                 rMobs, rXp, rMisc);
     }
 
     public int clearItems(MinecraftServer server) {
         int rItems = 0;
-        if (!ClearConfigNode.INSTANCE.getItem().isEnableItemclear())
+        if (!ClearConfigNode.INSTANCE.getItem().isSweepItems())
             return rItems;
         for (ServerLevel level : server.getAllLevels()) {
             List<Entity> entitiesToClear = new ArrayList<>();
@@ -229,7 +229,7 @@ public class ClearEngine {
 
     public int clearXPs(MinecraftServer server) {
         int rXp = 0;
-        if (!ClearConfigNode.INSTANCE.getOther().isEnableExpclear())
+        if (!ClearConfigNode.INSTANCE.getOther().isSweepExperienceOrbs())
             return rXp;
         for (ServerLevel level : server.getAllLevels()) {
             for (Entity ent : level.getAllEntities()) {
@@ -267,13 +267,13 @@ public class ClearEngine {
 
     private boolean shouldRemoveItem(ItemEntity item) {
         ResourceLocation rl = BuiltInRegistries.ITEM.getKey(item.getItem().getItem());
-        List<String> white = ClearConfigNode.INSTANCE.getItem().getItemEntitiesWhitelist();
-        List<String> black = ClearConfigNode.INSTANCE.getItem().getItemEntitiesBlacklist();
+        List<String> white = ClearConfigNode.INSTANCE.getItem().getItemWhitelist();
+        List<String> black = ClearConfigNode.INSTANCE.getItem().getItemBlacklist();
 
-        if (ClearConfigNode.INSTANCE.getItem().isItemWhiteMode()) {
+        if (ClearConfigNode.INSTANCE.getItem().isUseItemWhitelist()) {
             return !isMatchList(rl, white);
         }
-        if (ClearConfigNode.INSTANCE.getItem().isItemBlackMode()) {
+        if (ClearConfigNode.INSTANCE.getItem().isUseItemBlacklist()) {
             return isMatchList(rl, black);
         }
         return true;
@@ -281,8 +281,8 @@ public class ClearEngine {
 
     private boolean shouldRemoveMob(Mob mob) {
         boolean isMonster = mob instanceof Monster;
-        boolean enableMonsters = ClearConfigNode.INSTANCE.getMob().isclearMonsters();
-        boolean enableAnimals = ClearConfigNode.INSTANCE.getMob().isclearAnimals();
+        boolean enableMonsters = ClearConfigNode.INSTANCE.getMob().isSweepHostileMonsters();
+        boolean enableAnimals = ClearConfigNode.INSTANCE.getMob().isSweepPassiveAnimals();
 
         if (isMonster && !enableMonsters)
             return false;
@@ -290,13 +290,13 @@ public class ClearEngine {
             return false;
 
         ResourceLocation rl = EntityType.getKey(mob.getType());
-        List<String> white = ClearConfigNode.INSTANCE.getMob().getMobEntitiesWhitelist();
-        List<String> black = ClearConfigNode.INSTANCE.getMob().getMobEntitiesBlacklist();
+        List<String> white = ClearConfigNode.INSTANCE.getMob().getMobWhitelist();
+        List<String> black = ClearConfigNode.INSTANCE.getMob().getMobBlacklist();
 
-        if (ClearConfigNode.INSTANCE.getMob().isMobWhiteMode()) {
+        if (ClearConfigNode.INSTANCE.getMob().isUseMobWhitelist()) {
             return !isMatchList(rl, white);
         }
-        if (ClearConfigNode.INSTANCE.getMob().isMobBlackMode()) {
+        if (ClearConfigNode.INSTANCE.getMob().isUseMobBlacklist()) {
             return isMatchList(rl, black);
         }
         return true;
@@ -304,25 +304,25 @@ public class ClearEngine {
 
     private boolean shouldRemoveMisc(Entity entity) {
         ClearConfigNode.Misc cfg = ClearConfigNode.INSTANCE.getOther();
-        if (entity instanceof FallingBlockEntity && cfg.isEnableFallingBlockclear())
+        if (entity instanceof FallingBlockEntity && cfg.isSweepFallingBlocks())
             return true;
-        if (entity instanceof AbstractArrow && !(entity instanceof ThrownTrident) && cfg.isEnableArrowclear())
+        if (entity instanceof AbstractArrow && !(entity instanceof ThrownTrident) && cfg.isSweepArrows())
             return true;
-        if (entity instanceof ThrownTrident && cfg.isEnableTridentclear())
+        if (entity instanceof ThrownTrident && cfg.isSweepTridents())
             return true;
-        if (entity instanceof AbstractHurtingProjectile && cfg.isEnableProjectileclear())
+        if (entity instanceof AbstractHurtingProjectile && cfg.isSweepProjectiles())
             return true;
-        if (entity instanceof ShulkerBullet && cfg.isEnableBulletclear())
+        if (entity instanceof ShulkerBullet && cfg.isSweepShulkerBullets())
             return true;
-        if (entity instanceof FireworkRocketEntity && cfg.isEnableFireworkclear())
+        if (entity instanceof FireworkRocketEntity && cfg.isSweepFireworks())
             return true;
-        if (entity instanceof ItemFrame && cfg.isEnableItemFrameclear())
+        if (entity instanceof ItemFrame && cfg.isSweepItemFrames())
             return true;
-        if (entity instanceof Painting && cfg.isEnablePaintingclear())
+        if (entity instanceof Painting && cfg.isSweepPaintings())
             return true;
-        if (entity instanceof Boat && cfg.isEnableBoatclear())
+        if (entity instanceof Boat && cfg.isSweepBoats())
             return true;
-        if (entity instanceof PrimedTnt && cfg.isEnableTNTclear())
+        if (entity instanceof PrimedTnt && cfg.isSweepPrimedTNT())
             return true;
         return false;
     }

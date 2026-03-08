@@ -1,0 +1,12 @@
+{
+    "zzclear.chat.whitelist.item.added": "§a[Zzai] The item was successfully added to the clear whitelist!",
+    "zzclear.chat.whitelist.item.exists": "§c[Zzai] This item is already in the whitelist!",
+    "zzclear.chat.whitelist.item.removed": "§a[Zzai] The item was successfully removed from the whitelist!",
+    "zzclear.chat.whitelist.item.not_found": "§c[Zzai] This item could not be found in the whitelist!",
+    "zzclear.chat.command.help": "§e[Zzai] Zzclear Sweeper Instructions:\n/zzclear reload - Reload configuration\n/zzclear items/monsters/animals/xps/others - Clear specific category immediately\n/zzclear white item add/del - Add/remove held item to whitelist\n/zzclear white entity add/del <id> - Add/remove specific entity ID",
+    "zzclear.chat.whitelist.entity.added": "§a[Zzai] Entity %s successfully added to whitelist!",
+    "zzclear.chat.whitelist.entity.exists": "§c[Zzai] Entity %s is already in the whitelist!",
+    "zzclear.chat.whitelist.entity.removed": "§a[Zzai] Entity %s successfully removed from whitelist!",
+    "zzclear.chat.whitelist.entity.not_found": "§c[Zzai] Entity not found in the whitelist!",
+    "zzclear.chat.whitelist.help": "§e[Zzai] Please provide the correct whitelist command format!"
+}

@@ -1,0 +1,12 @@
+{
+  "zzclear.chat.whitelist.item.added": "§a[崽崽] 该物品已成功加入清理白名单！",
+  "zzclear.chat.whitelist.item.exists": "§c[崽崽] 该物品已经在白名单中了哦~",
+  "zzclear.chat.whitelist.item.removed": "§a[崽崽] 该物品已成功从白名单移除！",
+  "zzclear.chat.whitelist.item.not_found": "§c[崽崽] 白名单中找不到该物品呢~",
+  "zzclear.chat.command.help": "§e[崽崽] Zzclear 扫地大妈使用说明：\n/zzclear reload - 重载配置文件\n/zzclear items/monsters/animals/xps/others - 立即清理指定分类\n/zzclear white item add/del - 手持物品添加/移除白名单\n/zzclear white entity add/del <id> - 指定生物种类添加/移除白名单",
+  "zzclear.chat.whitelist.entity.added": "§a[崽崽] 实体 %s 已成功加入白名单！",
+  "zzclear.chat.whitelist.entity.exists": "§c[崽崽] 实体 %s 已经在白名单中了！",
+  "zzclear.chat.whitelist.entity.removed": "§a[崽崽] 实体 %s 已成功从白名单移除！",
+  "zzclear.chat.whitelist.entity.not_found": "§c[崽崽] 白名单中找不到该实体！",
+  "zzclear.chat.whitelist.help": "§e[崽崽] 请提供正确的白名单指令格式！"
+}

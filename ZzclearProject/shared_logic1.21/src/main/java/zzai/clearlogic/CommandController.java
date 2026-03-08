@@ -82,11 +82,11 @@ public class CommandController {
                         ItemStack item = player.getMainHandItem();
                         ResourceLocation rl = BuiltInRegistries.ITEM.getKey(item.getItem());
                         if (rl != null) {
-                                ClearConfigNode.INSTANCE.getItem().getItemEntitiesWhitelist().add(rl.toString());
+                                ClearConfigNode.INSTANCE.getItem().getItemWhitelist().add(rl.toString());
                                 ClearConfigNode.save();
-                                Static.sendMessage(player, "message.cmd.item_white.add.success");
+                                Static.sendMessage(player, "zzclear.chat.whitelist.item.added");
                         } else {
-                                Static.sendMessage(player, "message.cmd.item_white.add.fail");
+                                Static.sendMessage(player, "zzclear.chat.whitelist.item.exists");
                         }
                 } catch (Exception e) {
                         // Error handling
@@ -100,9 +100,9 @@ public class CommandController {
                         ItemStack item = player.getMainHandItem();
                         ResourceLocation rl = BuiltInRegistries.ITEM.getKey(item.getItem());
                         if (rl != null) {
-                                ClearConfigNode.INSTANCE.getItem().getItemEntitiesWhitelist().remove(rl.toString());
+                                ClearConfigNode.INSTANCE.getItem().getItemWhitelist().remove(rl.toString());
                                 ClearConfigNode.save();
-                                Static.sendMessage(player, "message.cmd.item_white.del.success");
+                                Static.sendMessage(player, "zzclear.chat.whitelist.item.removed");
                         }
                 } catch (Exception e) {
                         // Error handling
@@ -115,11 +115,11 @@ public class CommandController {
                         Player player = context.getSource().getPlayerOrException();
                         ResourceLocation rl = context.getArgument("id", ResourceLocation.class);
                         if (BuiltInRegistries.ENTITY_TYPE.get(rl).isPresent()) {
-                                ClearConfigNode.INSTANCE.getMob().getMobEntitiesWhitelist().add(rl.toString());
+                                ClearConfigNode.INSTANCE.getMob().getMobWhitelist().add(rl.toString());
                                 ClearConfigNode.save();
-                                Static.sendMessage(player, "message.cmd.entity_white.add.success");
+                                Static.sendMessage(player, "zzclear.chat.whitelist.entity.added");
                         } else {
-                                Static.sendMessage(player, "message.cmd.entity_white.add.fail");
+                                Static.sendMessage(player, "zzclear.chat.whitelist.entity.exists");
                         }
                 } catch (Exception e) {
                         // Error handling
@@ -132,9 +132,9 @@ public class CommandController {
                         Player player = context.getSource().getPlayerOrException();
                         ResourceLocation rl = context.getArgument("id", ResourceLocation.class);
                         if (BuiltInRegistries.ENTITY_TYPE.get(rl).isPresent()) {
-                                ClearConfigNode.INSTANCE.getMob().getMobEntitiesWhitelist().remove(rl.toString());
+                                ClearConfigNode.INSTANCE.getMob().getMobWhitelist().remove(rl.toString());
                                 ClearConfigNode.save();
-                                Static.sendMessage(player, "message.cmd.entity_white.del.success");
+                                Static.sendMessage(player, "zzclear.chat.whitelist.entity.removed");
                         }
                 } catch (Exception e) {
                         // Error handling
@@ -145,35 +145,35 @@ public class CommandController {
         private static int itemsExe(CommandContext<CommandSourceStack> context) {
                 int r = ClearEngine.INSTANCE.clearItems(context.getSource().getServer());
                 Static.sendMessageToAllPlayers(context.getSource().getServer(),
-                                ClearConfigNode.INSTANCE.getCommon().getclearNoticeComplete(), r, 0, 0, 0);
+                                ClearConfigNode.INSTANCE.getCommon().getSweepCompleteMessage(), r, 0, 0, 0);
                 return 1;
         }
 
         private static int monstersExe(CommandContext<CommandSourceStack> context) {
                 int r = ClearEngine.INSTANCE.clearMonsters(context.getSource().getServer());
                 Static.sendMessageToAllPlayers(context.getSource().getServer(),
-                                ClearConfigNode.INSTANCE.getCommon().getclearNoticeComplete(), 0, r, 0, 0);
+                                ClearConfigNode.INSTANCE.getCommon().getSweepCompleteMessage(), 0, r, 0, 0);
                 return 1;
         }
 
         private static int animalsExe(CommandContext<CommandSourceStack> context) {
                 int r = ClearEngine.INSTANCE.clearAnimals(context.getSource().getServer());
                 Static.sendMessageToAllPlayers(context.getSource().getServer(),
-                                ClearConfigNode.INSTANCE.getCommon().getclearNoticeComplete(), 0, r, 0, 0);
+                                ClearConfigNode.INSTANCE.getCommon().getSweepCompleteMessage(), 0, r, 0, 0);
                 return 1;
         }
 
         private static int xpsExe(CommandContext<CommandSourceStack> context) {
                 int r = ClearEngine.INSTANCE.clearXPs(context.getSource().getServer());
                 Static.sendMessageToAllPlayers(context.getSource().getServer(),
-                                ClearConfigNode.INSTANCE.getCommon().getclearNoticeComplete(), 0, 0, r, 0);
+                                ClearConfigNode.INSTANCE.getCommon().getSweepCompleteMessage(), 0, 0, r, 0);
                 return 1;
         }
 
         private static int othersExe(CommandContext<CommandSourceStack> context) {
                 int r = ClearEngine.INSTANCE.clearMisc(context.getSource().getServer());
                 Static.sendMessageToAllPlayers(context.getSource().getServer(),
-                                ClearConfigNode.INSTANCE.getCommon().getclearNoticeComplete(), 0, 0, 0, r);
+                                ClearConfigNode.INSTANCE.getCommon().getSweepCompleteMessage(), 0, 0, 0, r);
                 return 1;
         }
 }
